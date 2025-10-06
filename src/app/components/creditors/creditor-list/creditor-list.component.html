@@ -1,0 +1,79 @@
+<div class="creditor-list-container">
+  <div class="page-header">
+    <h2>Gestión de Acreedores</h2>
+    <button class="btn-primary" (click)="create()">
+      <span class="btn-icon">➕</span>
+      Nuevo Acreedor
+    </button>
+  </div>
+
+  @if (loading) {
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Cargando acreedores...</p>
+    </div>
+  } @else {
+    @if (creditors.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">👥</div>
+        <h3>No hay acreedores registrados</h3>
+        <p>Comienza agregando tu primer acreedor</p>
+        <button class="btn-primary" (click)="create()">
+          Crear Acreedor
+        </button>
+      </div>
+    } @else {
+      <div class="creditors-grid">
+        @for (creditor of creditors; track creditor.id) {
+          <div class="creditor-card">
+            <div class="creditor-header">
+              <div class="creditor-avatar">
+                {{ creditor.name.charAt(0).toUpperCase() }}
+              </div>
+              <div class="creditor-info">
+                <h3>{{ creditor.name }}</h3>
+                <p class="creditor-status" [class]="'status-' + creditor.recordStatus.toLowerCase()">
+                  {{ creditor.recordStatus }}
+                </p>
+              </div>
+            </div>
+            
+            <div class="creditor-details">
+              <div class="detail-item">
+                <span class="detail-icon">🆔</span>
+                <span>{{ creditor.document }}</span>
+              </div>
+              @if (creditor.email) {
+                <div class="detail-item">
+                  <span class="detail-icon">📧</span>
+                  <span>{{ creditor.email }}</span>
+                </div>
+              }
+              @if (creditor.phone) {
+                <div class="detail-item">
+                  <span class="detail-icon">📞</span>
+                  <span>{{ creditor.phone }}</span>
+                </div>
+              }
+              @if (creditor.address) {
+                <div class="detail-item">
+                  <span class="detail-icon">📍</span>
+                  <span>{{ creditor.address }}</span>
+                </div>
+              }
+            </div>
+            
+            <div class="creditor-actions">
+              <button class="btn-edit" (click)="edit(creditor.id)">
+                ✏️ Editar
+              </button>
+              <button class="btn-delete" (click)="delete(creditor.id)">
+                🗑️ Eliminar
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>
