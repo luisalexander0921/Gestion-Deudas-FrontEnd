@@ -22,6 +22,18 @@ export const routes: Routes = [
         loadComponent: () => import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent)
       },
       {
+        path: 'creditors',
+        loadComponent: () => import('./components/creditors').then(m => m.CreditorListComponent)
+      },
+      {
+        path: 'creditors/new',
+        loadComponent: () => import('./components/creditors').then(m => m.CreditorFormComponent)
+      },
+      {
+        path: 'creditors/edit/:id',
+        loadComponent: () => import('./components/creditors').then(m => m.CreditorFormComponent)
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'

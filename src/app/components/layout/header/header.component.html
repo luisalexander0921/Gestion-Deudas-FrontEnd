@@ -7,7 +7,7 @@
     <div class="header-right">
       <div class="user-menu" (click)="toggleUserMenu()">
         <div class="user-avatar">
-          <span>{{ currentUser?.username?.charAt(0).toUpperCase() }}</span>
+          <span>{{ currentUser?.username?.charAt(0)?.toUpperCase() || 'U' }}</span>
         </div>
         <div class="user-info">
           <span class="user-name">{{ currentUser?.username }}</span>
