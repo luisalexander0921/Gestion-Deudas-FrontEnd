@@ -1,0 +1,146 @@
+<div class="debt-detail-container">
+  <div class="detail-header">
+    <button class="btn-back" (click)="goBack()">
+      ← Volver a Deudas
+    </button>
+    <h2>Detalle de Deuda</h2>
+  </div>
+
+  @if (loading) {
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Cargando deuda...</p>
+    </div>
+  } @else if (debt) {
+    <div class="detail-card">
+      <div class="debt-header">
+        <div class="debt-amount">
+          <div class="amount-total">${{ debt.amount | number:'1.2-2' }}</div>
+          @if (debt.paidAmount && debt.paidAmount > 0) {
+            <div class="amount-details">
+              <div class="amount-paid">Pagado: ${{ debt.paidAmount | number:'1.2-2' }}</div>
+              @if (debt.remainingAmount && debt.remainingAmount > 0) {
+                <div class="amount-remaining">Pendiente: ${{ debt.remainingAmount | number:'1.2-2' }}</div>
+              }
+            </div>
+          }
+        </div>
+        <div class="debt-status" [class]="'badge-' + debt.status.toLowerCase()">
+          {{ debt.status === 'PENDING' ? 'Pendiente' : debt.status === 'PAID' ? 'Pagada' : debt.status === 'OVERDUE' ? 'Vencida' : 'Cancelada' }}
+        </div>
+      </div>
+
+      <div class="debt-info">
+        <div class="info-section">
+          <h3>Información General</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Acreedor:</label>
+              <span>{{ debt.creditor?.name || 'Sin acreedor' }}</span>
+            </div>
+            <div class="info-item">
+              <label>Monto total:</label>
+              <span class="amount">${{ debt.amount | number:'1.2-2' }}</span>
+            </div>
+            @if (debt.paidAmount && debt.paidAmount > 0) {
+              <div class="info-item">
+                <label>Monto pagado:</label>
+                <span class="amount-paid">${{ debt.paidAmount | number:'1.2-2' }}</span>
+              </div>
+              @if (debt.remainingAmount && debt.remainingAmount > 0) {
+                <div class="info-item">
+                  <label>Saldo pendiente:</label>
+                  <span class="amount-remaining">${{ debt.remainingAmount | number:'1.2-2' }}</span>
+                </div>
+              }
+            }
+            <div class="info-item">
+              <label>Estado:</label>
+              <span class="status" [class]="'status-' + debt.status.toLowerCase()">
+                {{ debt.status === 'PENDING' ? 'Pendiente' : debt.status === 'PAID' ? 'Pagada' : debt.status === 'OVERDUE' ? 'Vencida' : 'Cancelada' }}
+              </span>
+            </div>
+            <div class="info-item">
+              <label>Estado del registro:</label>
+              <span>{{ debt.recordStatus === 'ACTIVE' ? 'Activo' : 'Inactivo' }}</span>
+            </div>
+          </div>
+        </div>
+
+        @if (debt.description) {
+          <div class="info-section">
+            <h3>Descripción</h3>
+            <p class="description">{{ debt.description }}</p>
+          </div>
+        }
+
+        <div class="info-section">
+          <h3>Fechas</h3>
+          <div class="info-grid">
+            @if (debt.dueDate) {
+              <div class="info-item">
+                <label>Fecha de vencimiento:</label>
+                <span>{{ debt.dueDate | date:'dd/MM/yyyy' }}</span>
+              </div>
+            }
+            <div class="info-item">
+              <label>Fecha de creación:</label>
+              <span>{{ debt.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+            <div class="info-item">
+              <label>Última actualización:</label>
+              <span>{{ debt.updatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="debt-actions">
+        @if (debt.status === 'PENDING') {
+          <button class="btn-payment" (click)="makePayment()">
+            💰 Hacer Abono
+          </button>
+          <button class="btn-paid" (click)="markAsPaid()">
+            ✅ Pagar Total
+          </button>
+          <button class="btn-edit" (click)="edit()">
+            ✏️ Editar Deuda
+          </button>
+        }
+        <button class="btn-delete" (click)="delete()">
+          🗑️ Eliminar Deuda
+        </button>
+      </div>
+    </div>
+
+    <!-- Historial de Pagos -->
+    <div class="payments-section">
+      <h3>Historial de Pagos</h3>
+      
+      @if (loadingPayments) {
+        <div class="loading-container">
+          <div class="loading-spinner"></div>
+          <p>Cargando pagos...</p>
+        </div>
+      } @else if (payments.length === 0) {
+        <div class="empty-payments">
+          <p>No hay pagos registrados para esta deuda</p>
+        </div>
+      } @else {
+        <div class="payments-list">
+          @for (payment of payments; track payment.id) {
+            <div class="payment-item">
+              <div class="payment-info">
+                <div class="payment-amount">${{ payment.amount | number:'1.2-2' }}</div>
+                <div class="payment-date">{{ payment.createdAt | date:'dd/MM/yyyy HH:mm' }}</div>
+                @if (payment.description) {
+                  <div class="payment-description">{{ payment.description }}</div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

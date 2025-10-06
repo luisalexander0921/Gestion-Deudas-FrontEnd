@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
-import { Debt, CreateDebtRequest, FilterDebtRequest } from '../models/debt.model';
+import { Debt, CreateDebtRequest, FilterDebtRequest, Payment, CreatePaymentRequest } from '../models/debt.model';
 
 @Injectable({
   providedIn: 'root'
@@ -58,5 +58,15 @@ export class DebtService {
   // Marcar deuda como pagada
   markAsPaid(id: number): Observable<Debt> {
     return this.apiService.patch<Debt>(`/debt/${id}/mark-paid`, {});
+  }
+
+  // Crear un pago/abono
+  createPayment(debtId: number, paymentData: CreatePaymentRequest): Observable<Payment> {
+    return this.apiService.post<Payment>(`/debt/${debtId}/payments`, paymentData);
+  }
+
+  // Obtener historial de pagos de una deuda
+  getPaymentsByDebt(debtId: number): Observable<Payment[]> {
+    return this.apiService.get<Payment[]>(`/debt/${debtId}/payments`);
   }
 }

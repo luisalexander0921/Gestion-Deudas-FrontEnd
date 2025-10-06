@@ -33,7 +33,7 @@
               <div class="creditor-info">
                 <h3>{{ creditor.name }}</h3>
                 <p class="creditor-status" [class]="'status-' + creditor.recordStatus.toLowerCase()">
-                  {{ creditor.recordStatus }}
+                  {{ creditor.recordStatus === 'ACTIVE' ? 'Activo' : 'Inactivo' }}
                 </p>
               </div>
             </div>

@@ -1,0 +1,122 @@
+<div class="debt-list-container">
+  <div class="page-header">
+    <h2>Gestión de Deudas</h2>
+    <button class="btn-primary" (click)="create()">
+      <span class="btn-icon">➕</span>
+      Nueva Deuda
+    </button>
+  </div>
+
+  <div class="filters-container">
+    <div class="filter-buttons">
+      <button 
+        class="filter-btn" 
+        [class.active]="currentFilter === 'ALL'"
+        (click)="setFilter('ALL')">
+        Todas ({{ getTotalCount() }})
+      </button>
+      <button 
+        class="filter-btn" 
+        [class.active]="currentFilter === 'PENDING'"
+        (click)="setFilter('PENDING')">
+        Pendientes ({{ getPendingCount() }})
+      </button>
+      <button 
+        class="filter-btn" 
+        [class.active]="currentFilter === 'PAID'"
+        (click)="setFilter('PAID')">
+        Pagadas ({{ getPaidCount() }})
+      </button>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Cargando deudas...</p>
+    </div>
+  } @else {
+    @if (filteredDebts.length === 0 && debts.length > 0) {
+      <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <h3>No hay deudas {{ currentFilter === 'PENDING' ? 'pendientes' : currentFilter === 'PAID' ? 'pagadas' : '' }}</h3>
+        <p>Cambia el filtro para ver otras deudas</p>
+      </div>
+    } @else if (debts.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">🧾</div>
+        <h3>No hay deudas registradas</h3>
+        <p>Comienza agregando tu primera deuda</p>
+        <button class="btn-primary" (click)="create()">
+          Crear Deuda
+        </button>
+      </div>
+    } @else {
+      <div class="debts-grid">
+        @for (debt of filteredDebts; track debt.id) {
+          <div class="debt-card" [class]="'status-' + debt.status.toLowerCase()">
+            <div class="debt-header">
+              <div class="debt-amount">
+                <div class="amount-total">${{ debt.amount | number:'1.2-2' }}</div>
+                @if (debt.paidAmount && debt.paidAmount > 0) {
+                  <div class="amount-details">
+                    <small>Pagado: ${{ debt.paidAmount | number:'1.2-2' }}</small>
+                    @if (debt.remainingAmount && debt.remainingAmount > 0) {
+                      <small>Pendiente: ${{ debt.remainingAmount | number:'1.2-2' }}</small>
+                    }
+                  </div>
+                }
+              </div>
+              <div class="debt-status" [class]="'badge-' + debt.status.toLowerCase()">
+                {{ debt.status === 'PENDING' ? 'Pendiente' : debt.status === 'PAID' ? 'Pagada' : debt.status === 'OVERDUE' ? 'Vencida' : 'Cancelada' }}
+              </div>
+            </div>
+            
+            <div class="debt-details">
+              <div class="detail-item">
+                <span class="detail-icon">👤</span>
+                <span>{{ debt.creditor?.name || 'Sin acreedor' }}</span>
+              </div>
+              @if (debt.description) {
+                <div class="detail-item">
+                  <span class="detail-icon">📝</span>
+                  <span>{{ debt.description }}</span>
+                </div>
+              }
+              @if (debt.dueDate) {
+                <div class="detail-item">
+                  <span class="detail-icon">📅</span>
+                  <span>{{ debt.dueDate | date:'dd/MM/yyyy' }}</span>
+                </div>
+              }
+              <div class="detail-item">
+                <span class="detail-icon">📊</span>
+                <span>{{ debt.recordStatus === 'ACTIVE' ? 'Activo' : 'Inactivo' }}</span>
+              </div>
+            </div>
+            
+            <div class="debt-actions">
+              <button class="btn-detail" (click)="viewDetail(debt.id)">
+                🔍 Ver Detalle
+              </button>
+              @if (debt.status === 'PENDING') {
+                <button class="btn-payment" (click)="makePayment(debt)">
+                  💰 Abonar
+                </button>
+                <button class="btn-paid" (click)="markAsPaid(debt.id)">
+                  ✅ Pagar Total
+                </button>
+                <button class="btn-edit" (click)="edit(debt.id)">
+                  ✏️ Editar
+                </button>
+              }
+              <button class="btn-delete" (click)="delete(debt.id)">
+                🗑️ Eliminar
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

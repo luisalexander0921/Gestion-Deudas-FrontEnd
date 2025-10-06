@@ -34,6 +34,22 @@ export const routes: Routes = [
         loadComponent: () => import('./components/creditors').then(m => m.CreditorFormComponent)
       },
       {
+        path: 'debts',
+        loadComponent: () => import('./components/debts').then(m => m.DebtListComponent)
+      },
+      {
+        path: 'debts/new',
+        loadComponent: () => import('./components/debts').then(m => m.DebtFormComponent)
+      },
+      {
+        path: 'debts/edit/:id',
+        loadComponent: () => import('./components/debts').then(m => m.DebtFormComponent)
+      },
+      {
+        path: 'debts/detail/:id',
+        loadComponent: () => import('./components/debts').then(m => m.DebtDetailComponent)
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'
