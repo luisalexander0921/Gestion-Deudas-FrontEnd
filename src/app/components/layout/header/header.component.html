@@ -1,0 +1,29 @@
+<header class="header">
+  <div class="header-content">
+    <div class="header-left">
+      <h1 class="page-title">Dashboard</h1>
+    </div>
+    
+    <div class="header-right">
+      <div class="user-menu" (click)="toggleUserMenu()">
+        <div class="user-avatar">
+          <span>{{ currentUser?.username?.charAt(0).toUpperCase() }}</span>
+        </div>
+        <div class="user-info">
+          <span class="user-name">{{ currentUser?.username }}</span>
+          <span class="user-role">Usuario</span>
+        </div>
+        <div class="dropdown-arrow">▼</div>
+        
+        @if (showUserMenu) {
+          <div class="user-dropdown">
+            <button class="dropdown-item" (click)="logout()">
+              <span class="dropdown-icon">🚪</span>
+              Cerrar Sesión
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</header>

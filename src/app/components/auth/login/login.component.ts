@@ -39,7 +39,7 @@ export class LoginComponent {
           this.loginForm.reset();
           this.isLoading = false;
           this.toastService.success('Inicio de sesión exitoso');
-          this.router.navigate(['/register']);
+          this.router.navigate(['/dashboard']);
         },
         error: (error) => {
           this.errorMessage = error.error?.message || 'Error al iniciar sesión';
